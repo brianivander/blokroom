@@ -1,24 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import { Container } from "@chakra-ui/react";
+import React from "react";
+import Moralis from "moralis/dist/moralis.min.js";
+import { Navigate, Link } from "react-router-dom";
+import { Topbar } from "./components/Topbar";
 
 function App() {
+  //check if user is signed in
+  const currentUser = Moralis.User.current();
+  if (currentUser) {
+    // user is authenticated
+  } else {
+    // user is NOT authenticated
+  }
+
+  /* Authentication code */
+  async function login() {
+    let user = Moralis.User.current();
+    if (!user) {
+      user = await Moralis.authenticate({
+        signingMessage: "Log in using Moralis",
+      })
+        .then(function (user) {
+          console.log("logged in user:", user);
+          console.log(user.get("ethAddress"));
+        })
+        .catch(function (error) {
+          console(error);
+        });
+    }
+  }
+
+  async function logOut() {
+    await Moralis.User.logOut();
+    console.log("logged out");
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      {currentUser ? <Navigate to="/lounge" /> : <Navigate to="/signup" />}
+      <Topbar />
+      <button onClick={() => login()}>Login</button>
+      <Link to="/signup">Signup</Link> | <Link to="/login">Login</Link>
+    </Container>
   );
 }
 
