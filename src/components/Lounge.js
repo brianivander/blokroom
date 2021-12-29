@@ -1,8 +1,14 @@
 import React from "react";
 import Moralis from "moralis/dist/moralis.min.js";
-import { Container, Button } from "@chakra-ui/react";
+import { Container, Button, Stack, Heading, Text } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import {
+  MainContainer,
+  Conversation,
+  Avatar,
+} from "@chatscope/chat-ui-kit-react";
+import groupIcon from "../assets/group-icon.svg";
 
 export const Lounge = () => {
   const navigate = useNavigate();
@@ -21,25 +27,43 @@ export const Lounge = () => {
     });
   };
 
-  const connectMetamask = async () => {
-    if (window.ethereum) {
-      await window.ethereum
-        .request({ method: "eth_requestAccounts" })
-        .catch((error) => {
-          alert("Error: " + error.code + " " + error.message + error);
-        });
-      console.log("MetaMask is connected!");
-      const ethacc = await window.ethereum.request({ method: "eth_accounts" });
-      console.log("etacc: ", ethacc);
-    }
-  };
-
   return (
     <Container>
-      {" "}
-      <Button onClick={() => connectMetamask()}>Connect Metamask</Button>
       {!auth && <Navigate to="/Signup" />}
       <Button onClick={() => logout()}>Logout</Button>
+      <MainContainer responsive style={{ border: "0" }}>
+        <Stack width="100%">
+          <Conversation
+            name="Lilly"
+            lastSenderName="Lilly"
+            info="Yes i can do it for you asdf asdf asdf asdf asdf asdf asd fas dfa dfa sdf"
+          >
+            <Avatar src={groupIcon} name="Lilly" status="available" />
+          </Conversation>
+          <Conversation
+            name="Lilly"
+            lastSenderName="Lilly"
+            info="Yes i can do it for you asdf asdf asdf asdf asdf asdf asd fas dfa dfa sdf"
+          >
+            <Avatar src={groupIcon} name="Lilly" status="available" />
+          </Conversation>
+          <Conversation
+            name="Lilly"
+            lastSenderName="Lilly"
+            info="Yes i can do it for you asdf asdf asdf asdf asdf asdf asd fas dfa dfa sdf"
+          >
+            <Avatar src={groupIcon} name="Lilly" status="available" />
+          </Conversation>
+        </Stack>
+      </MainContainer>
+      <Heading>This is Lounge</Heading>
+      <Stack alignItems="center" width="100%" mt={10}>
+        <Text>Create your first room</Text>
+        <Button onClick={() => navigate(`/create-room`)}>Create Room</Button>
+        <Button onClick={() => navigate(`/room/A0001`)}>
+          Join Bored Ape Yacht Club Room
+        </Button>
+      </Stack>
     </Container>
   );
 };

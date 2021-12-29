@@ -3,6 +3,7 @@ import React from "react";
 import Moralis from "moralis/dist/moralis.min.js";
 import { Navigate, Link } from "react-router-dom";
 import { Topbar } from "./components/Topbar";
+import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 
 function App() {
   //check if user is signed in
