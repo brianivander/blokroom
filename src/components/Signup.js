@@ -53,11 +53,9 @@ export const Signup = () => {
     <Container>
       {" "}
       {auth && <Navigate to="/lounge" />}
-<<<<<<< HEAD
-      <Button onClick={() => loginMetamask()}>Login using Metamask from Mac</Button>
-=======
-      <Button onClick={() => loginMetamask()}>Login using MetamaskC</Button>
->>>>>>> origin/master
+      <Button onClick={() => loginMetamask()}>
+        Login using Metamask from Mac
+      </Button>
       <Box mt={10} borderWidth="1px" borderRadius="2xl" padding={6}>
         <Heading align="center">Sign Up</Heading>
         <form>
