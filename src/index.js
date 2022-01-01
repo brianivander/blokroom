@@ -9,8 +9,10 @@ import { Signup } from "./components/Signup";
 import { Login } from "./components/Login";
 import { Lounge } from "./components/Lounge";
 import { Room } from "./components/Room";
-import { CreateRoom } from "./components/CreateRoom";
+import { CreateRoomForm } from "./components/CreateRoomForm";
 import { Metamask } from "./components/Metamask";
+import "./index.css";
+import { MoralisProvider } from "react-moralis";
 
 /* Moralis init code */
 const serverUrl = "https://nxn8fjencjmj.usemoralis.com:2053/server";
@@ -28,19 +30,21 @@ const theme = extendTheme({
 
 ReactDOM.render(
   <React.StrictMode>
-    <ChakraProvider theme={theme}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="signup" element={<Signup />} />
-          <Route path="login" element={<Login />} />
-          <Route path="lounge" element={<Lounge />} />{" "}
-          <Route path="room/:roomCode" element={<Room />} />{" "}
-          <Route path="create-room" element={<CreateRoom />} />
-          <Route path="metamask" element={<Metamask />} />
-        </Routes>
-      </BrowserRouter>
-    </ChakraProvider>
+    <MoralisProvider appId={appId} serverUrl={serverUrl}>
+      <ChakraProvider theme={theme}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<App />} />
+            <Route path="signup" element={<Signup />} />
+            <Route path="login" element={<Login />} />
+            <Route path="lounge" element={<Lounge />} />{" "}
+            <Route path="room/:roomCode" element={<Room />} />{" "}
+            <Route path="create-room" element={<CreateRoomForm />} />
+            <Route path="metamask" element={<Metamask />} />
+          </Routes>
+        </BrowserRouter>
+      </ChakraProvider>
+    </MoralisProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -30,8 +30,8 @@ export const Metamask = (props) => {
   const getNFT = async () => {
     //NFTs
     const options = {
-      chain: "0x1",
-      address: "0x571c513df562470d5cff30fbe947f7bf46263b95",
+      chain: chainId,
+      address: currentAddress,
     };
 
     console.log(options);

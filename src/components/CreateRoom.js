@@ -91,9 +91,21 @@ export const CreateRoom = () => {
       <Button onClick={() => navigate(-1)}>Close</Button>
       <Steps activeStep={activeStep}>
         <Step label="Intro" key="content0">
-          A "Room" in blokroom is an exclusive room for the holders of the same
-          NFT Collection. Only NFT holders in the same collection can join the
-          room by proving their ownership of NFT
+          <p>
+            Who can create a room?
+            <br /> Only creators of NFT can create a room. If you have
+            created/minted NFT on Opensea or other platforms, you can create a
+            room.
+            <br /> Who can join the room?
+            <br /> Right now only the owners of the room with same Contract ID
+            can join the room. For example Cryptopunks created 10,000 NFTs which
+            are all the same Contract ID.
+            <br /> Want to create room but you do not fulfill the requirement
+            above, please join our discord and let us know your suggestions
+            <br /> A "Room" in blokroom is an exclusive room for the holders of
+            the same NFT Collection. Only NFT holders in the same collection can
+            join the room by proving their ownership of NFT
+          </p>
         </Step>
         <Step label="NFT" key="content1">
           Connect to Metamask and select an NFT. You must be the creator of the

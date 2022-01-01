@@ -1,107 +1,150 @@
-// import { Container, Button, Text } from "@chakra-ui/react";
-// import { useMoralisQuery, useNewMoralisObject } from "react-moralis";
-// import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
+import { Container, Button, Text } from "@chakra-ui/react";
+import Moralis from "moralis/dist/moralis.min.js";
+import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 
-// import {
-//   MainContainer,
-//   ChatContainer,
-//   MessageList,
-//   Message,
-//   MessageInput,
-//   MessageGroup,
-// } from "@chatscope/chat-ui-kit-react";
-// import { useState, useEffect } from "react";
+import {
+  MainContainer,
+  ChatContainer,
+  MessageList,
+  Message,
+  MessageInput,
+} from "@chatscope/chat-ui-kit-react";
+import { useState, useEffect, useCallback } from "react";
 
-// export const Messages = (roomData) => {
-//   const [textMessage, setTextMessage] = useState("");
-//   const myRoomId = roomData.roomId;
-//   const myUserId = roomData.userId;
-//   const myUsername = roomData.username;
-//   const { fetch, data, isLoading } = useMoralisQuery(
-//     "Messages",
-//     (query) => query.equalTo("roomId", myRoomId),
-//     [],
-//     { live: true }
-//   );
+export const Messages = ({ roomId, userId }) => {
+  const [textMessage, setTextMessage] = useState("");
+  const [textMsgs, setTextMsgs] = useState([]);
 
-//   // if (data.length > 0) {
-//   //   console.log("data: ", data);
-//   //   var messages = [];
-//   //   var message = {};
-//   //   console.log(messages);
-//   //   for (let i in data) {
-//   //     message.id = data[i].id;
-//   //     message.userId = data[i].attributes.userId;
-//   //     messages.push({ ...message });
-//   //   }
-//   //   console.log("messages: ", messages);
-//   // }
+  useEffect(() => {
+    getMessages();
+  }, []);
 
-//   const { isSaving, error, save } = useNewMoralisObject("Messages");
+  useEffect(() => {
+    subscribeMessages();
+  }, []);
 
-//   const sendMessage = () => {
-//     console.log(textMessage);
-//     setTextMessage("");
-//     var roomId = myRoomId;
-//     var userId = myUserId;
-//     var username = myUsername;
-//     save({ roomId, userId, textMessage, username });
-//     console.log(error);
-//   };
+  const subscribeMessages = async (textMsgs) => {
+    const query = new Moralis.Query("Messages");
+    query.equalTo("roomId", roomId);
+    const subscription = await query.subscribe();
 
-//   return (
-//     <Container>
-//       {/* react chat */}
-//       <MainContainer style={{ border: "0" }}>
-//         <ChatContainer>
-//           <MessageList>
-//             {data.map((d) => {
-//               return (
-//                 <>
-//                   <Text
-//                     align={d.attributes.userId === myUserId ? "right" : "left"}
-//                     fontSize="xs"
-//                   >
-//                     {d.attributes.username}
-//                   </Text>
-//                   <Message
-//                     model={{
-//                       message: d.attributes.textMessage,
-//                       direction:
-//                         d.attributes.userId === myUserId
-//                           ? "outgoing"
-//                           : "incoming",
-//                       sentTime: "just now",
-//                       sender: "Joe",
-//                     }}
-//                     key={d.id}
-//                   />
-//                 </>
-//               );
-//             })}
-//             {/* <Message
-//               model={{
-//                 message: "Hello my friend",
-//                 sentTime: "just now",
-//                 sender: "Joe",
-//               }}
-//             /> */}
-//           </MessageList>
-//           <MessageInput
-//             value={textMessage}
-//             placeholder="Type message here"
-//             attachButton={false}
-//             onChange={(text) => {
-//               console.log(text);
-//               setTextMessage(text);
-//             }}
-//             onSend={() => {
-//               sendMessage();
-//             }}
-//           />
-//         </ChatContainer>
-//       </MainContainer>
-//       <Button onClick={() => fetch}>Fetch Data</Button>
-//     </Container>
-//   );
-// };
+    // on subscription object created
+    subscription.on("create", (object) => {
+      console.log(textMsgs);
+    });
+  };
+
+  // Get textMsgs in this room
+  const getMessages = async () => {
+    const Message = Moralis.Object.extend("Messages");
+    const message = new Moralis.Query(Message);
+    message.equalTo("roomId", roomId);
+    const msgResults = await message.find();
+
+    var msgs = [];
+
+    for (let i = 0; i < msgResults.length; i++) {
+      var username = await getUsername(msgResults[i].attributes.userId);
+
+      var msg = {
+        msgId: msgResults[i].id,
+        createdAt: msgResults[i].attributes.createdAt,
+        userId: msgResults[i].attributes.userId,
+        textMessage: msgResults[i].attributes.textMessage,
+        username: username,
+      };
+
+      msgs.push(msg);
+    }
+
+    setTextMsgs(msgs);
+  };
+
+  const getUsername = async (userId) => {
+    // Query username
+    const User = Moralis.Object.extend("User");
+    const user = new Moralis.Query(User);
+    user.equalTo("objectId", userId);
+    const userResults = await user.find();
+
+    return userResults[0].attributes.username;
+  };
+
+  const sendMessage = (e) => {
+    var newMsg = {
+      textMessage: textMessage,
+      userId: userId,
+      roomId: roomId,
+    };
+
+    const Message = Moralis.Object.extend("Messages");
+    const message = new Message();
+
+    message.set(newMsg);
+    message.save().then(
+      (msg) => {
+        // Execute any logic that should take place after the object is saved.
+        //alert("New object created with objectId: " + msg.id);
+      },
+      (error) => {
+        // Execute any logic that should take place if the save fails.
+        // error is a Moralis.Error with an error code and message.
+        alert("Failed to create new object, with error code: " + error.message);
+      }
+    );
+  };
+
+  return (
+    <Container>
+      {/* react chat */}
+      <div
+        style={{
+          height: "100vh",
+        }}
+      >
+        <Button onClick={() => console.log(textMsgs)}>get textMsgs</Button>
+        <MainContainer style={{ border: "0" }}>
+          <ChatContainer>
+            <MessageList>
+              <MessageList.Content>
+                {textMsgs &&
+                  textMsgs.map((data, key) => {
+                    return (
+                      <div key={"0." + key}>
+                        <Text
+                          key={"1." + key}
+                          align={data.userId === userId ? "right" : "left"}
+                          fontSize="xs"
+                        >
+                          {data.username}
+                        </Text>
+                        <Message
+                          model={{
+                            message: data.textMessage,
+                            direction:
+                              data.userId === userId ? "outgoing" : "incoming",
+                            sentTime: "just now",
+                            sender: "Joe",
+                          }}
+                          key={"2." + key}
+                        />
+                      </div>
+                    );
+                  })}
+              </MessageList.Content>
+            </MessageList>
+            <MessageInput
+              value={textMessage}
+              placeholder="Type message here"
+              attachButton={false}
+              onChange={(text) => {
+                setTextMessage(text);
+              }}
+              onSend={sendMessage}
+            />
+          </ChatContainer>
+        </MainContainer>
+      </div>
+    </Container>
+  );
+};
