@@ -74,7 +74,7 @@ export const CreateRoom = () => {
         const roomMembers = new RoomMembers();
         roomMembers.set({
           roomId: room.id,
-          roomMemberId: currentUser.id,
+          userId: currentUser.id,
         });
         roomMembers.save();
       },

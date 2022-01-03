@@ -2,7 +2,6 @@ import { Container } from "@chakra-ui/react";
 import React from "react";
 import Moralis from "moralis/dist/moralis.min.js";
 import { Navigate, Link } from "react-router-dom";
-import { Topbar } from "./components/Topbar";
 import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 
 function App() {
@@ -39,7 +38,6 @@ function App() {
   return (
     <Container>
       {currentUser ? <Navigate to="/lounge" /> : <Navigate to="/signup" />}
-      <Topbar />
       <button onClick={() => login()}>Login</button>
       <Link to="/signup">Signup</Link> | <Link to="/login">Login</Link>
     </Container>

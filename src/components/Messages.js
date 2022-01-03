@@ -16,21 +16,29 @@ export const Messages = ({ roomId, userId }) => {
   const [textMsgs, setTextMsgs] = useState([]);
 
   useEffect(() => {
-    getMessages();
-  }, []);
-
-  useEffect(() => {
     subscribeMessages();
   }, []);
 
-  const subscribeMessages = async (textMsgs) => {
+  const subscribeMessages = async () => {
     const query = new Moralis.Query("Messages");
     query.equalTo("roomId", roomId);
     const subscription = await query.subscribe();
 
+    subscription.on("open", () => {
+      getMessages();
+    });
+
     // on subscription object created
-    subscription.on("create", (object) => {
-      console.log(textMsgs);
+    subscription.on("create", async (object) => {
+      var msg = {
+        msgId: object.id,
+        createdAt: object.attributes.createdAt,
+        userId: object.attributes.userId,
+        textMessage: object.attributes.textMessage,
+        username: await getUsername(object.attributes.userId),
+      };
+
+      setTextMsgs((oldarr) => [...oldarr, msg]);
     });
   };
 
@@ -85,6 +93,7 @@ export const Messages = ({ roomId, userId }) => {
       (msg) => {
         // Execute any logic that should take place after the object is saved.
         //alert("New object created with objectId: " + msg.id);
+        setTextMessage("");
       },
       (error) => {
         // Execute any logic that should take place if the save fails.
@@ -95,56 +104,46 @@ export const Messages = ({ roomId, userId }) => {
   };
 
   return (
-    <Container>
-      {/* react chat */}
-      <div
-        style={{
-          height: "100vh",
-        }}
-      >
-        <Button onClick={() => console.log(textMsgs)}>get textMsgs</Button>
-        <MainContainer style={{ border: "0" }}>
-          <ChatContainer>
-            <MessageList>
-              <MessageList.Content>
-                {textMsgs &&
-                  textMsgs.map((data, key) => {
-                    return (
-                      <div key={"0." + key}>
-                        <Text
-                          key={"1." + key}
-                          align={data.userId === userId ? "right" : "left"}
-                          fontSize="xs"
-                        >
-                          {data.username}
-                        </Text>
-                        <Message
-                          model={{
-                            message: data.textMessage,
-                            direction:
-                              data.userId === userId ? "outgoing" : "incoming",
-                            sentTime: "just now",
-                            sender: "Joe",
-                          }}
-                          key={"2." + key}
-                        />
-                      </div>
-                    );
-                  })}
-              </MessageList.Content>
-            </MessageList>
-            <MessageInput
-              value={textMessage}
-              placeholder="Type message here"
-              attachButton={false}
-              onChange={(text) => {
-                setTextMessage(text);
-              }}
-              onSend={sendMessage}
-            />
-          </ChatContainer>
-        </MainContainer>
-      </div>
-    </Container>
+    <MainContainer style={{ border: "0" }}>
+      <ChatContainer>
+        <MessageList>
+          <MessageList.Content>
+            {textMsgs &&
+              textMsgs.map((data, key) => {
+                return (
+                  <div key={"0." + key}>
+                    <Text
+                      key={"1." + key}
+                      align={data.userId === userId ? "right" : "left"}
+                      fontSize="xs"
+                    >
+                      {data.username}
+                    </Text>
+                    <Message
+                      model={{
+                        message: data.textMessage,
+                        direction:
+                          data.userId === userId ? "outgoing" : "incoming",
+                        sentTime: "just now",
+                        sender: "Joe",
+                      }}
+                      key={"2." + key}
+                    />
+                  </div>
+                );
+              })}
+          </MessageList.Content>
+        </MessageList>
+        <MessageInput
+          value={textMessage}
+          placeholder="Type message here"
+          attachButton={false}
+          onChange={(text) => {
+            setTextMessage(text);
+          }}
+          onSend={sendMessage}
+        />
+      </ChatContainer>
+    </MainContainer>
   );
 };
