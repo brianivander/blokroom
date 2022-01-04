@@ -185,8 +185,7 @@ export const JoinRoom = ({ roomDetails, userId }) => {
                         }
                         onError={(e) => {
                           e.target.onerror = null;
-                          e.target.src =
-                            "https://image.freepik.com/free-vector/programming-concept-illustration_114360-1351.jpg";
+                          e.target.src = "https://i.imgur.com/mesuICu.png";
                         }}
                       />
                     </Box>

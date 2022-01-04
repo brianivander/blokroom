@@ -4,18 +4,9 @@ import { useEffect } from "react";
 
 export const TryUser = () => {
   useEffect(async () => {
-    // login
-    //Moralis.User.logIn("user1@email.com", "1234");
-
-    // logout
-    // Moralis.User.logOut();
-
-    // const user = new Moralis.Query("User");
-    // const userResults = await user.find();
-    // console.log(userResults);
-
-    const ratings = await Moralis.Cloud.run("helloworld");
-    console.log(ratings);
+    const params = { userId: "kFmVV1xxnekMNjMfgRUoXz7I" };
+    const user = await Moralis.Cloud.run("getUsername", params);
+    console.log(user);
   });
 
   return <div></div>;

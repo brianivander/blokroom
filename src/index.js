@@ -10,7 +10,7 @@ import { Login } from "./components/Login";
 import { Lounge } from "./components/Lounge";
 import { Room } from "./components/Room";
 import { CreateRoom } from "./components/CreateRoom";
-import { TryUser } from "./components/TryUser";
+import { Account } from "./components/Account";
 import { Metamask } from "./components/Metamask";
 import "./index.css";
 import { MoralisProvider } from "react-moralis";
@@ -42,7 +42,7 @@ ReactDOM.render(
             <Route path="room/:roomCode" element={<Room />} />{" "}
             <Route path="create-room" element={<CreateRoom />} />
             <Route path="metamask" element={<Metamask />} />
-            <Route path="tryuser" element={<TryUser />} />
+            <Route path="account" element={<Account />} />
           </Routes>
         </BrowserRouter>
       </ChakraProvider>

@@ -51,11 +51,18 @@ export const Signup = () => {
 
   return (
     <Container>
-      {" "}
       {auth && <Navigate to="/lounge" />}
-      <Button onClick={() => loginMetamask()}>
-        Login using Metamask from Mac
-      </Button>
+      <Box mt={10} borderWidth="1px" borderRadius="2xl" padding={6}>
+        <Heading>Welcome to Signift!</Heading>
+        <Stack mt={3}>
+          <Text>
+            Here, NFT creators can create chat room, polling, redeemable
+            vouchers, and more, exclusively for their NFT holders. If an owner
+            sells the NFT, they will not be able to continue in the room, the
+            new owner will then be able to join.
+          </Text>
+        </Stack>
+      </Box>
       <Box mt={10} borderWidth="1px" borderRadius="2xl" padding={6}>
         <Heading align="center">Sign Up</Heading>
         <form>
@@ -100,15 +107,20 @@ export const Signup = () => {
           >
             Login
           </Button>
-          <Button
-            variant="link"
-            colorScheme="blue"
-            onClick={() => navigate("/metamask")}
-          >
-            Metamask Page
-          </Button>
         </Stack>
       </Box>
+      <Stack align="center" mt={6}>
+        <Text>We'd really love to hear your suggestions</Text>
+        <Button
+          variant="link"
+          colorScheme="blue"
+          onClick={() =>
+            window.open("https://discord.gg/BsGBVyjtAk", "_blank").focus()
+          }
+        >
+          Join our Discord
+        </Button>
+      </Stack>
     </Container>
   );
 };

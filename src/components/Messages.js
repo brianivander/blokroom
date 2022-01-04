@@ -69,13 +69,9 @@ export const Messages = ({ roomId, userId }) => {
   };
 
   const getUsername = async (userId) => {
-    // Query username
-    const User = Moralis.Object.extend("User");
-    const user = new Moralis.Query(User);
-    user.equalTo("objectId", userId);
-    const userResults = await user.find();
-
-    return userResults[0].attributes.username;
+    const params = { userId: userId };
+    const user = await Moralis.Cloud.run("getUsername", params);
+    return user.attributes.username;
   };
 
   const sendMessage = (e) => {

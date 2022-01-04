@@ -1,11 +1,6 @@
 import React from "react";
 import { Flex, Box, Text, IconButton, Input, Button } from "@chakra-ui/react";
-import {
-  HamburgerIcon,
-  ExternalLinkIcon,
-  SettingsIcon,
-  CloseIcon,
-} from "@chakra-ui/icons";
+import { HamburgerIcon, ExternalLinkIcon, CloseIcon } from "@chakra-ui/icons";
 import {
   Menu,
   MenuButton,
@@ -15,6 +10,7 @@ import {
   MenuGroup,
   MenuOptionGroup,
   MenuDivider,
+  Badge,
 } from "@chakra-ui/react";
 import { Navigate, useNavigate } from "react-router-dom";
 
@@ -25,17 +21,16 @@ export const TopBar = ({ logout }) => {
     <Box
       height="50px"
       width="500px"
-      background={"lightgrey"}
+      bg="blue.500"
       margin="auto"
       borderBottom="1px solid lightgrey"
     >
       <Flex alignItems="center" height="100%">
         <Menu>
-          <MenuButton>
+          <MenuButton color="white">
             <HamburgerIcon w={8} h={8} marginLeft={2} marginRight={4} />
           </MenuButton>
           <MenuList>
-            <MenuItem icon={<SettingsIcon />}>Account Settings</MenuItem>
             <MenuItem
               icon={<ExternalLinkIcon />}
               onClick={() =>
@@ -49,9 +44,10 @@ export const TopBar = ({ logout }) => {
             </MenuItem>
           </MenuList>
         </Menu>
-        <Text fontWeight="700" fontSize="xl">
+        <Text fontWeight="700" fontSize="xl" color="white">
           Signift
         </Text>
+        <Badge ml={2}>ALPHA</Badge>
       </Flex>
     </Box>
   );

@@ -17,7 +17,8 @@ export const TopBarRoom = ({ roomName, isUserJoined }) => {
     >
       <Box
         width="500px"
-        background={"lightgrey"}
+        color="white"
+        bg="blue.500"
         height="100%"
         margin="auto"
         borderBottom="1px solid lightgrey"
@@ -30,7 +31,9 @@ export const TopBarRoom = ({ roomName, isUserJoined }) => {
             marginRight={4}
             onClick={() => navigate(-1)}
           />
-          <Text fontWeight="700">{roomName} </Text>
+          <Text fontWeight="700" fontSize="xl">
+            {roomName}
+          </Text>
         </Flex>
       </Box>
     </Box>

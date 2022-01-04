@@ -31,6 +31,7 @@ export const Room = () => {
   const [textMessage, setTextMessage] = useState("");
   const [roomName, setRoomName] = useState("");
   const [roomDetails, setRoomDetails] = useState("");
+  const [isRoomReady, setIsRoomReady] = useState(false);
 
   // Query room details
   const getRoomDetails = async () => {
@@ -54,10 +55,13 @@ export const Room = () => {
     //check if user has joined the room
     const RoomMembers = Moralis.Object.extend("RoomMembers");
     const roomsjoined = new Moralis.Query(RoomMembers);
-    roomsjoined.equalTo("roomIdJoined", roomResults[0].id);
+    roomsjoined.equalTo("roomId", roomResults[0].id);
     roomsjoined.equalTo("userId", currentUser.id);
     const rjResults = await roomsjoined.find();
     rjResults.length == 1 && setIsUserJoined(true);
+    console.log(rjResults);
+
+    setIsRoomReady(true);
   };
 
   useEffect(() => {
@@ -70,7 +74,7 @@ export const Room = () => {
         height: "100vh",
       }}
     >
-      {currentUser && roomId && (
+      {isRoomReady && currentUser && roomId && (
         <Box
           height={"100%"}
           width={isLargerThan600 ? "500px" : "100%"}

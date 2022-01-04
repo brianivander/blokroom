@@ -8,7 +8,7 @@ import {
   Conversation,
   Avatar,
 } from "@chatscope/chat-ui-kit-react";
-import groupIcon from "../assets/group-icon.svg";
+import groupIcon from "../assets/group.png";
 import { TopBar } from "./TopBar";
 
 export const Lounge = () => {
@@ -74,15 +74,9 @@ export const Lounge = () => {
   };
 
   const getUsername = async (userId) => {
-    console.log(userId);
-    // Query username
-    //const User = Moralis.Object.extend("User");
-    const user = new Moralis.Query("User");
-    user.equalTo("username", "user2");
-    const userResults = await user.find();
-
-    console.log(await userResults);
-    return await userResults[0].attributes.username;
+    const params = { userId: userId };
+    const user = await Moralis.Cloud.run("getUsername", params);
+    return user.attributes.username;
   };
 
   const logout = () => {
@@ -96,6 +90,9 @@ export const Lounge = () => {
     <Box>
       <TopBar logout={() => logout()} />
       <Container>
+        <Box m={2}>
+          <Text>Welcome, {currentUser.attributes.username}</Text>
+        </Box>
         {!auth && <Navigate to="/Signup" />}
         <MainContainer responsive style={{ border: "0" }}>
           <Stack width="100%">
